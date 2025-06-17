@@ -55,7 +55,7 @@ A comprehensive RESTful API for managing inventory items and orders, built with 
 1. **Clone the repository**
 
 ```bash
-git clone https://github.com/yourusername/Inventory-And-Order-Management-System-Application.git
+git clone https://github.com/soumyadeepdey2003/Inventory-And-Order-Management-System-Application.git
 cd Inventory-And-Order-Management-System-Application
 ```
 
@@ -95,7 +95,7 @@ mvn clean install
 1. **Clone the repository**
 
 ```bash
-git clone https://github.com/yourusername/Inventory-And-Order-Management-System-Application.git
+git clone https://github.com/soumyadeepdey2003/Inventory-And-Order-Management-System-Application.git
 cd Inventory-And-Order-Management-System-Application
 ```
 
