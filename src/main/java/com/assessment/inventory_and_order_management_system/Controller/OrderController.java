@@ -1,61 +1,56 @@
 package com.assessment.inventory_and_order_management_system.Controller;
 
-
-import com.assessment.inventory_and_order_management_system.Model.Order;
 import com.assessment.inventory_and_order_management_system.Service.OrderService;
+import com.assessment.inventory_and_order_management_system.Dto.OrderDTO;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/order")
+@RequestMapping("/api/v1/orders")
 @Slf4j
 public class OrderController {
 
-    @Autowired
-    private OrderService orderService;
+    private final OrderService orderService;
 
-    @PostMapping("/save")
-    public ResponseEntity<Order> saveOrder( @RequestBody Order order) throws Exception {
-        try {
-            log.info("Saving order: {}", order);
-            return ResponseEntity.ok(orderService.saveOrder(order));
-        } catch (Exception e) {
-            throw new Exception("Error saving order: " + e.getMessage());
-        }
+    @PostMapping
+    public ResponseEntity<OrderDTO> createOrder(@Valid @RequestBody OrderDTO orderDTO) {
+        log.info("REST request to create Order: {}", orderDTO);
+        OrderDTO result = orderService.saveOrder(orderDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(result);
     }
 
-    @GetMapping("/find/{id}")
-    public ResponseEntity<Order> findOrderById(@PathVariable Long id) throws Exception {
-        try {
-            log.info("Finding order by id: {}", id);
-            return ResponseEntity.ok(orderService.findOrderById(id));
-        } catch (Exception e) {
-            throw new Exception("Error finding order: " + e.getMessage());
-        }
+    @GetMapping("/{id}")
+    public ResponseEntity<OrderDTO> getOrderById(@PathVariable Long id) {
+        log.info("REST request to get Order by id: {}", id);
+        OrderDTO orderDTO = orderService.findOrderById(id);
+        return ResponseEntity.ok(orderDTO);
     }
 
-    @GetMapping("/all")
-    public ResponseEntity<Iterable<Order>> findAllOrders() throws Exception {
-        try {
-            log.info("Finding all orders");
-            return ResponseEntity.ok(orderService.findAllOrders());
-        } catch (Exception e) {
-            throw new Exception("Error finding orders: " + e.getMessage());
-        }
+    @GetMapping
+    public ResponseEntity<List<OrderDTO>> getAllOrders() {
+        log.info("REST request to get all Orders");
+        List<OrderDTO> orders = orderService.findAllOrders();
+        return ResponseEntity.ok(orders);
     }
 
-    @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Void> deleteOrder(@PathVariable Long id) throws Exception {
-        try {
-            log.info("Deleting order by id: {}", id);
-            orderService.deleteOrder(id);
-            return ResponseEntity.ok().build();
-        } catch (Exception e) {
-            throw new Exception("Error deleting order: " + e.getMessage());
-        }
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<OrderDTO>> getOrdersByUserId(@PathVariable Long userId) {
+        log.info("REST request to get Orders by userId: {}", userId);
+        List<OrderDTO> orders = orderService.findOrdersByUserId(userId);
+        return ResponseEntity.ok(orders);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteOrder(@PathVariable Long id) {
+        log.info("REST request to delete Order: {}", id);
+        orderService.deleteOrder(id);
+        return ResponseEntity.noContent().build();
     }
 }

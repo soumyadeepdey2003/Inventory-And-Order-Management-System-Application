@@ -1,68 +1,71 @@
 package com.assessment.inventory_and_order_management_system.Controller;
 
-
-import com.assessment.inventory_and_order_management_system.Model.User;
 import com.assessment.inventory_and_order_management_system.Service.UserService;
+import com.assessment.inventory_and_order_management_system.Dto.UserDTO;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/user")
+@RequestMapping("/api/v1/users")
 @Slf4j
 public class UserController {
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
 
-    @PostMapping("/register")
-    public ResponseEntity<User> registerUser(@RequestBody User user) throws Exception {
-        try {
-            log.info("Registering user: {}", user);
-            return ResponseEntity.ok(userService.saveUser(user));
-        }
-        catch (Exception e) {
-            log.error("Error registering user: {}", user, e);
-            return ResponseEntity.badRequest().build();
-        }
+    @PostMapping
+    public ResponseEntity<UserDTO> createUser(@Valid @RequestBody UserDTO userDTO) {
+        log.info("REST request to create User: {}", userDTO);
+        UserDTO result = userService.saveUser(userDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(result);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<User> findUserById(@PathVariable Long id) throws Exception {
-        try {
-            log.info("Finding user by id: {}", id);
-            return ResponseEntity.ok(userService.findUserById(id));
-        }
-        catch (Exception e) {
-            log.error("Error finding user by id: {}", id, e);
-            return ResponseEntity.badRequest().build();
-        }
+    public ResponseEntity<UserDTO> getUserById(@PathVariable Long id) {
+        log.info("REST request to get User by id: {}", id);
+        UserDTO userDTO = userService.findUserById(id);
+        return ResponseEntity.ok(userDTO);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<UserDTO>> getAllUsers() {
+        log.info("REST request to get all Users");
+        List<UserDTO> users = userService.findAllUsers();
+        return ResponseEntity.ok(users);
     }
 
     @GetMapping("/username/{username}")
-    public ResponseEntity<User> findUserByUsername(@PathVariable String username) throws Exception {
-        try {
-            log.info("Finding user by username: {}", username);
-            return ResponseEntity.ok(userService.findUserByUsername(username));
-        }
-        catch (Exception e) {
-            log.error("Error finding user by username: {}", username, e);
-            return ResponseEntity.badRequest().build();
-        }
+    public ResponseEntity<UserDTO> getUserByUsername(@PathVariable String username) {
+        log.info("REST request to get User by username: {}", username);
+        UserDTO userDTO = userService.findUserByUsername(username);
+        return ResponseEntity.ok(userDTO);
     }
 
-    @PutMapping("/update")
-    public ResponseEntity<User> updateUser(@RequestBody User user) throws Exception {
-        try {
-            log.info("Updating user: {}", user);
-            return ResponseEntity.ok(userService.updateUser(user));
-        }
-        catch (Exception e) {
-            log.error("Error updating user: {}", user, e);
+    @PutMapping("/{id}")
+    public ResponseEntity<UserDTO> updateUser(
+        @PathVariable Long id,
+        @Valid @RequestBody UserDTO userDTO) {
+        log.info("REST request to update User: {}", userDTO);
+
+        if (!id.equals(userDTO.getId())) {
+            log.error("Invalid ID");
             return ResponseEntity.badRequest().build();
         }
+
+        UserDTO result = userService.updateUser(userDTO);
+        return ResponseEntity.ok(result);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
+        log.info("REST request to delete User: {}", id);
+        userService.deleteUser(id);
+        return ResponseEntity.noContent().build();
     }
 }
