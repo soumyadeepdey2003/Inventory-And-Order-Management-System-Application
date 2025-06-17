@@ -1,0 +1,599 @@
+{
+	"info": {
+		"_postman_id": "b9e7226d-96e7-46cf-9799-e9bffd9634e2",
+		"name": "DIATOZ",
+		"description": "API collection for testing the Inventory and Order Management System",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "28658772",
+		"_collection_link": "https://interstellar-escape-303516.postman.co/workspace/Personal-Workspace~be32e4f0-e67f-4fcf-ba86-48be462890c6/collection/28658772-b9e7226d-96e7-46cf-9799-e9bffd9634e2?action=share&source=collection_link&creator=28658772"
+	},
+	"item": [
+		{
+			"name": "Authentication",
+			"item": [
+				{
+					"name": "Register User",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"pm.environment.set(\"jwtToken\", jsonData.accessToken);",
+									"pm.collectionVariables.set(\"jwtToken\", jsonData.accessToken);",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"username\": \"{{$randomUserName}}\",\n  \"password\": \"password123\",\n  \"role\": \"CUSTOMER\"\n}"
+						},
+						"url": "{{baseUrl}}/api/v1/auth/register",
+						"description": "Register a new user"
+					},
+					"response": []
+				},
+				{
+					"name": "Login Admin",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"pm.environment.set(\"jwtToken\", jsonData.accessToken);",
+									"pm.collectionVariables.set(\"jwtToken\", jsonData.accessToken);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"username\": \"admin\",\n  \"password\": \"soumyadeep2025\"\n}"
+						},
+						"url": "{{baseUrl}}/api/v1/auth/login",
+						"description": "Login as admin user"
+					},
+					"response": []
+				},
+				{
+					"name": "Login User",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"pm.environment.set(\"jwtToken\", jsonData.accessToken);",
+									"pm.collectionVariables.set(\"jwtToken\", jsonData.accessToken);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"username\": \"testuser\",\n  \"password\": \"password123\"\n}"
+						},
+						"url": "{{baseUrl}}/api/v1/auth/login",
+						"description": "Login as regular user"
+					},
+					"response": []
+				},
+				{
+					"name": "Refresh Token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"pm.environment.set(\"jwtToken\", jsonData.accessToken);",
+									"pm.collectionVariables.set(\"jwtToken\", jsonData.accessToken);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"refreshToken\": \"{{refreshToken}}\"\n}"
+						},
+						"url": "{{baseUrl}}/api/v1/auth/refresh-token",
+						"description": "Refresh the JWT token using a refresh token"
+					},
+					"response": []
+				},
+				{
+					"name": "Logout",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{jwtToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"url": "{{baseUrl}}/api/v1/auth/logout",
+						"description": "Logout the current user"
+					},
+					"response": []
+				}
+			],
+			"description": "Authentication related endpoints"
+		},
+		{
+			"name": "Users",
+			"item": [
+				{
+					"name": "Get All Users (Admin Only)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{jwtToken}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": "{{baseUrl}}/api/v1/users",
+						"description": "Get all users (requires ADMIN role)"
+					},
+					"response": []
+				},
+				{
+					"name": "Get User by ID",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{jwtToken}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": "{{baseUrl}}/api/v1/users/1",
+						"description": "Get user by ID"
+					},
+					"response": []
+				},
+				{
+					"name": "Get User by Username",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{jwtToken}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": "{{baseUrl}}/api/v1/users/username/admin",
+						"description": "Get user by username"
+					},
+					"response": []
+				},
+				{
+					"name": "Create User (Admin Only)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{jwtToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"username\": \"newuser\",\n  \"password\": \"password123\",\n  \"role\": \"USER\"\n}"
+						},
+						"url": "{{baseUrl}}/api/v1/users",
+						"description": "Create a new user (requires ADMIN role)"
+					},
+					"response": []
+				},
+				{
+					"name": "Update User",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{jwtToken}}"
+							}
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"id\": 2,\n  \"username\": \"testuser\",\n  \"password\": \"newpassword123\",\n  \"role\": \"USER\"\n}"
+						},
+						"url": "{{baseUrl}}/api/v1/users/2",
+						"description": "Update a user (requires ADMIN role or the user themselves)"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete User (Admin Only)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{jwtToken}}"
+							}
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": "{{baseUrl}}/api/v1/users/3",
+						"description": "Delete a user (requires ADMIN role)"
+					},
+					"response": []
+				}
+			],
+			"description": "User management endpoints"
+		},
+		{
+			"name": "Items",
+			"item": [
+				{
+					"name": "Get All Items (Public)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{baseUrl}}/api/v1/items",
+						"description": "Get all items (public endpoint)"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Item by ID (Public)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{baseUrl}}/api/v1/items/5",
+						"description": "Get item by ID (public endpoint)"
+					},
+					"response": []
+				},
+				{
+					"name": "Search Items by Name (Public)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/items/search?name=shoes",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"items",
+								"search"
+							],
+							"query": [
+								{
+									"key": "name",
+									"value": "shoes"
+								}
+							]
+						},
+						"description": "Search items by name (public endpoint)"
+					},
+					"response": []
+				},
+				{
+					"name": "Create Item (Auth Required)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{jwtToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"{{$randomProductName}}\",\n  \"quantity\": 10,\n  \"price\": {{$randomPrice}}\n}"
+						},
+						"url": "{{baseUrl}}/api/v1/items",
+						"description": "Create a new item (requires authentication)"
+					},
+					"response": []
+				},
+				{
+					"name": "Update Item (Auth Required)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{jwtToken}}"
+							}
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"id\": 1,\n  \"name\": \"Laptop XPS 15 (Updated)\",\n  \"quantity\": 15,\n  \"price\": 1399.99\n}"
+						},
+						"url": "{{baseUrl}}/api/v1/items/1",
+						"description": "Update an item (requires authentication)"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Item (Auth Required)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{jwtToken}}"
+							}
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": "{{baseUrl}}/api/v1/items/1",
+						"description": "Delete an item (requires authentication)"
+					},
+					"response": []
+				}
+			],
+			"description": "Item management endpoints"
+		},
+		{
+			"name": "Orders",
+			"item": [
+				{
+					"name": "Get All Orders (Auth Required)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{jwtToken}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": "{{baseUrl}}/api/v1/orders",
+						"description": "Get all orders (requires authentication)"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Order by ID (Auth Required)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{jwtToken}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": "{{baseUrl}}/api/v1/orders/1",
+						"description": "Get order by ID (requires authentication)"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Orders by User ID (Auth Required)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{jwtToken}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": "{{baseUrl}}/api/v1/orders/user/2",
+						"description": "Get orders by user ID (requires authentication)"
+					},
+					"response": []
+				},
+				{
+					"name": "Create Order (Auth Required)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{jwtToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"userId\": 2,\n  \"itemIds\": [10, 42, 23]\n}"
+						},
+						"url": "{{baseUrl}}/api/v1/orders",
+						"description": "Create a new order (requires authentication)"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Order (Auth Required)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{jwtToken}}"
+							}
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": "{{baseUrl}}/api/v1/orders/7",
+						"description": "Delete an order (requires authentication)"
+					},
+					"response": []
+				}
+			],
+			"description": "Order management endpoints"
+		},
+		{
+			"name": "Order Items",
+			"item": [
+				{
+					"name": "Get All Order Items (Auth Required)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{jwtToken}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": "{{baseUrl}}/api/v1/order-items",
+						"description": "Get all order items (requires authentication)"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Total Orders for Item (Auth Required)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{jwtToken}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": "{{baseUrl}}/api/v1/order-items/item/1",
+						"description": "Get total orders for an item (requires authentication)"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Total Orders for Item by User (Auth Required)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{jwtToken}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": "{{baseUrl}}/api/v1/order-items/item/1/user/testuser",
+						"description": "Get total orders for an item by a specific user (requires authentication)"
+					},
+					"response": []
+				},
+				{
+					"name": "Save Total Orders for Item (Auth Required)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{jwtToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"url": "{{baseUrl}}/api/v1/order-items/item/1",
+						"description": "Save total orders for an item (requires authentication)"
+					},
+					"response": []
+				},
+				{
+					"name": "Save Total Orders for Item by User (Auth Required)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{jwtToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"url": "{{baseUrl}}/api/v1/order-items/item/1/user/testuser",
+						"description": "Save total orders for an item by a specific user (requires authentication)"
+					},
+					"response": []
+				}
+			],
+			"description": "Order item management endpoints"
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:8080",
+			"type": "string"
+		},
+		{
+			"key": "jwtToken",
+			"value": "",
+			"type": "string"
+		}
+	]
+}
